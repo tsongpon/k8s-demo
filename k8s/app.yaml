@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-demo
+  labels:
+    app: k8s-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: k8s-demo
+  template:
+    metadata:
+      labels:
+        app: k8s-demo
+    spec:
+      containers:
+        - image: asia-southeast1-docker.pkg.dev/k8s-demo-358808/k8s-demo/k8s-demo
+          name: k8s-demo
+          imagePullPolicy: Always
+          env:
+            - name: APP_NAME
+              value: DEMO
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-demo
+  labels:
+    app: k8s-demo
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: k8s-demo
